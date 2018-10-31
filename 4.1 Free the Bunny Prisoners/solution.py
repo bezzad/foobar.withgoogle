@@ -1,5 +1,8 @@
-
 def answer(num_buns, num_required):
+    x = [[0 for x in xrange(5)] for y in xrange(6)] 
+    x[0].append(123)
+    print("x", x)
+
     c = num_buns - num_required + 1  # count of each number
     u = num_required  # count of used unique numbers
     # (u * c) % num_buns == 0 
