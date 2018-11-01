@@ -2,8 +2,6 @@
 
 ## What's Google Foobar?
 
-### foobar invitation
-![foobar-invitation]()
 
 Google Foobar called foo.bar, the system has been used by Google for at least a year and is triggered when a user enters certain search terms relating to coding languages like Python and Java. The search results page breaks open to reveal the message "You're speaking our language. Up for a challenge?" to which the user can decline once, request the message isn't shown again, or click "I want to play".
 
@@ -14,6 +12,9 @@ how fast and memory-efficient it is!
 I completed some level of this challenge, and have no work left to do on it unless
 Google sends me more.
 
+#### foobar invitation
+![foobar-invitation](https://github.com/bezzad/foobar.withgoogle/raw/master/img/foobar-first-message.png)
+
 ## My challenge questions:
 
 The challenge consists of 5 levels consisting of algorithm problems.
@@ -22,7 +23,7 @@ The first few levels were relatively easy, but as the levels peaked up, the diff
 
 Currently I am on level 4 and just have one more label to go.
 
-![current-level-status]()
+![current-level-status](https://github.com/bezzad/foobar.withgoogle/raw/master/img/current-level-status.jpg)
 
 Upon completing level 3 , I had to submit my personal details with a potential recruiter for a future interview.
 
