@@ -11,7 +11,9 @@ how fast and memory) efficient it is!
 I completed some level of this challenge, and have no work left to do on it unless
 Google sends me more.
 
-### foobar invitation
+### Foobar invitation
+
+[Google Foo Bar](https://foobar.withgoogle.com) is Google's secret recruiting process embedded within their search engine. There are 5 levels, each with a different number of challenges that follow a story.
 
 ![foobar-invitation](https://github.com/bezzad/foobar.withgoogle/raw/master/img/foobar-first-message.png)
 
@@ -30,13 +32,28 @@ The Google Foobar is presumably still hiring and its needed to submit solution e
 I don’t know about the future upcomings for this, but to be honest I really enjoyed the challenges.
 Looking forward to solve more.
 
-1. [Braille Translation](https://github.com/bezzad/foobar.withgoogle/tree/master/1.%20Braille%20Translation)
-2. 1. [Do not Get Volunteered](https://github.com/bezzad/foobar.withgoogle/tree/master/2.1%20Do%20not%20Get%20Volunteered)
-   1. [En Route Salute](https://github.com/bezzad/foobar.withgoogle/tree/master/2.2%20En%20Route%20Salute)
-3. 1. [Fuel Injection Perfection](https://github.com/bezzad/foobar.withgoogle/tree/master/3.1%20Fuel%20Injection%20Perfection)
-   2. [Bomb, Baby](https://github.com/bezzad/foobar.withgoogle/tree/master/3.2%20Bomb%2C%20Baby)
-   3. [Find the Access Codes](https://github.com/bezzad/foobar.withgoogle/tree/master/3.3%20Find%20the%20Access%20Codes)
-4. 1. [Free the Bunny Prisoners](https://github.com/bezzad/foobar.withgoogle/tree/master/4.1%20Free%20the%20Bunny%20Prisoners)
-   2. [...]()
-5. [...]()
+Inside each level is a challenge folder with a problem file describing the challenge and constraints, and my solution to the challenge.
 
+### Level 1
+
+- [Braille Translation](https://github.com/bezzad/foobar.withgoogle/tree/master/1.%20Braille%20Translation)
+
+### Level 2
+
+- [Do not Get Volunteered](https://github.com/bezzad/foobar.withgoogle/tree/master/2.1%20Do%20not%20Get%20Volunteered)
+- [En Route Salute](https://github.com/bezzad/foobar.withgoogle/tree/master/2.2%20En%20Route%20Salute)
+  
+### Level 3
+
+- [Fuel Injection Perfection](https://github.com/bezzad/foobar.withgoogle/tree/master/3.1%20Fuel%20Injection%20Perfection)
+- [Bomb, Baby](https://github.com/bezzad/foobar.withgoogle/tree/master/3.2%20Bomb%2C%20Baby)
+- [Find the Access Codes](https://github.com/bezzad/foobar.withgoogle/tree/master/3.3%20Find%20the%20Access%20Codes)
+
+### Level 4
+
+- [Free the Bunny Prisoners](https://github.com/bezzad/foobar.withgoogle/tree/master/4.1%20Free%20the%20Bunny%20Prisoners)
+- [Coming soon...]()
+
+### Level 5
+
+- [Coming soon...]()
