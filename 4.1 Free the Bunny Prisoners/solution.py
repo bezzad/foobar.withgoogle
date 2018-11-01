@@ -1,61 +1,31 @@
+from itertools import combinations
+
 def answer(num_buns, num_required):
-    x = [[0 for x in xrange(5)] for y in xrange(6)] 
-    x[0].append(123)
-    print("x", x)
+    result = [[] for _ in xrange(num_buns)]
 
-    c = num_buns - num_required + 1  # count of each number
-    u = num_required  # count of used unique numbers
-    # (u * c) % num_buns == 0 
-    if(c*num_required > num_buns):
-        u = num_buns
+    if(num_buns < num_required):
+        return result
 
-    print("c", c, "u", u)
-    result = []
-    # if (num_buns < num_required):
-    #     # no group of (num_required - 1) bunnies can
-    #     return result
+    # repeat count of each unique number
+    repeat = num_buns - num_required + 1
 
-    # countOfFilled = 0
-    # usedNumbersCounter = []
-    # for bun in xrange(num_buns):
-    #     for req in xrange(num_required):
-    #         result[bun]
-    #         # result.append(
-    #         # usedNumbersCounter[req] += 1
+    # get all combinations of size repeat times bunnies
+    groups = combinations(xrange(num_buns), repeat)
 
+    # distribute numbers by generated groups to no group of (num_required - 1) bunnies can
+    unique_num = 0
+    for group in groups:
+        for n in group:
+            result[n].append(unique_num)
+        unique_num += 1
+        # print("by", group, "result", result)
     return result
 
-# c = count of each number = num_buns - num_required + 1
-# u = count of used unique numbers = num_required + x_nums
-# (u * c) % num_buns == 0      ---->     ((num_required + x_nums)*c) % num_buns == 0
-# if(c*num_required > num_buns) u = num_buns
-# else u = num_required
-# answer(6, 3): c=4
-# [0,1,2,4]
-# [0,1,3,4]
-# [0,1,4,5]
-# [0,2,3,5]
-# [1,2,3,5]
-# [2,3,4,5]
-
-
-print(answer(3, 1))
-print("----------------------")
-print(answer(2, 2))
-print("----------------------")
-print(answer(2, 1))
-print("----------------------")
-print(answer(9, 1))
-print("----------------------")
-print(answer(3, 2))
-print("----------------------")
-print(answer(4, 5))
-print("----------------------")
-print(answer(4, 4))
-print("----------------------")
-print(answer(4, 3))
-print("----------------------")
-print(answer(5, 3))
-print("----------------------")
-print(answer(6, 3))
-print("----------------------")
+if __name__ == "__main__":
+    print("run in debugger...")
+    print("=============================== TEST CASES ===============================")
+    for i in xrange(1, 10):
+        for j in xrange(0, 10):
+            print("bunnies", i, "required", j)
+            print(answer(i, j))
+            print("------------------------------------------------------------------")
