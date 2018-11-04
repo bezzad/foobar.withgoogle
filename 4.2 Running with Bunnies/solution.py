@@ -16,6 +16,8 @@ if __name__ == '__main__':
     for row in case1:
         print('', row)
     print("\n  Expected: [0, 1]\nCalculated:", str(answer(case1, 3)))
+    # route: start --> 0 --> 1 --> bulkhead
+    # time:      3     2     1     0
     print("================================================================")
     # print("\n\nCase 2: Provided test case 2.\nTime limit: 1")
     # case2 = [[0, 2, 2, 2, -1],
@@ -26,16 +28,18 @@ if __name__ == '__main__':
     # for row in case2:
     #     print('', row)
     # print("\n  Expected: [1, 2]\nCalculated:", str(answer(case2, 1)))
+    # route: start --> bulkhead --> 1 --> bulkhead --> 2 --> bulkhead
+    # time:      1            2     0            1    -1            0
     # print("================================================================")
-    # print("\n\nCase 3: Infinite negative cycle.\nTime limit: -500")
-    # case3 = [[0, 2, 2, 2, -1],
-    #          [9, 0, 2, 2, 0],
-    #          [9, 3, 0, 2, 0],
-    #          [9, 3, 2, 0, 0],
-    #          [-1, 3, 2, 2, 0]]
+    # print("\n\nCase 3: Infinite negative cycle.\nTime limit: 0")
+    # case3 = [[0, 20, 20, 20, -1],
+    #          [90, 0, 20, 20, 0],
+    #          [90, 30, 0, 20, 0],
+    #          [90, 30, 20, 0, 0],
+    #          [-1, 30, 20, 20, 0]]
     # for row in case3:
     #     print('', row)
-    # print("\n  Expected: [0, 1, 2]\nCalculated:", str(answer(case3, -500)))
+    # print("\n  Expected: [0, 1, 2]\nCalculated:", str(answer(case3, 0)))
     # print("================================================================")
     # print("\n\nCase 4: Max bunnies. None rescuable.\nTime limit: 1")
     # case4 = [[1, 1, 1, 1, 1, 1, 1],
