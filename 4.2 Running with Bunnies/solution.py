@@ -1,16 +1,7 @@
-"""
-The Bellman-Ford's complete sources algorithm (shortest path from all to all points)
-reference: https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
-
-Graph API:
-    iter(graph) gives all nodes
-    iter(graph[u]) gives neighbours of u
-    graph[u][v] gives weight of edge (u, v)
-"""
-
-# Class to represent a graph
-
-
+# Graph API:
+#   iter(graph) gives all nodes
+#   iter(graph[u]) gives neighbours of u
+#   graph[u][v] gives weight of edge (u, v)
 class Graph:
 
     def __init__(self, square_matrix):
@@ -55,6 +46,8 @@ class Graph:
         return True
 
 
+    # The Bellman-Ford's complete sources algorithm.
+    # Shortest path from all to all points
     def BellmanFordCompleteSource(self):
         for v in xrange(self.V):
             if self.BellmanFord(v):
@@ -67,13 +60,22 @@ class Graph:
         
 
     def get_paths(self, start, goal, time):
+        nonNegativeCycleVertexes = []
         stack = [(start, [start], time)]
         while stack:
             (vertex, path, remainTime) = stack.pop()
-            for next in self.shortestGraph[vertex]:
-                timeToNext = self.graph[path[len(path)-1]][next]
+            for next in self.shortestGraph[vertex] - set(nonNegativeCycleVertexes):
+                # find non-negative cycle:
+                pathLength = len(path)
+                if pathLength > 2 and next == path[pathLength-2] and path[pathLength-1] == path[pathLength-3]:
+                    if(next != self.V-1): # cycle factor != bulkhead
+                        nonNegativeCycleVertexes.append(next)
+
+                timeToNext = self.graph[path[pathLength-1]][next]
                 timeToGoalFromNext = self.distances[next][goal]
-                if (0 <= remainTime - timeToNext - timeToGoalFromNext): # can to go next vertex and after that go to bulkhead?
+
+                # can to go next vertex and after that go to bulkhead?
+                if (0 <= remainTime - timeToNext - timeToGoalFromNext): 
                     nextPath = path + [next] # update path          
                     nextRemainTime = remainTime - timeToNext        
                     stack.append((next, nextPath, nextRemainTime))          
@@ -222,6 +224,12 @@ if __name__ == "__main__":
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0]], 0, [0, 1, 2])
+
+    # test([[1, 1, 1, 1, 1],
+    #       [-1, 1, 1, 1, 1],
+    #       [-1, 1, 1, 1, 1],
+    #       [-1, 1, 1, 1, 1],
+    #       [-1, 1, 1, 1, 1]], 1, [0, 1, 2])
         
     # test([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     #       [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
