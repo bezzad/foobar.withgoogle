@@ -17,13 +17,12 @@ class Graph:
         self.graph = square_matrix
         self.V = len(square_matrix)  # No. of vertices
 
-        # Step 1: Initialize distances from src to all other vertices as INFINITE
-        #         start admiting that the rest of nodes are very very far
+        # Initialize distances from src to all other vertices as INFINITE
+        # so, start admiting that the rest of nodes are very very far
         self.INF = float("Inf")
         self.distances = [[self.INF for _ in xrange(self.V)] for _ in xrange(self.V)]
         self.shortestPath = [[None for _ in xrange(self.V)] for _ in xrange(self.V)]
         self.shortestGraph = [] # keep the graph from shortest paths
-        
 
     # The main function that finds shortest distances from src to
     # all other vertices using Bellman-Ford algorithm.  The function
@@ -55,6 +54,7 @@ class Graph:
 
         return True
 
+
     def BellmanFordCompleteSource(self):
         for v in xrange(self.V):
             if self.BellmanFord(v):
@@ -64,42 +64,34 @@ class Graph:
             else:
                 return False
         return True
+        
 
-    def dfs_paths(self, start, goal):
-        stack = [(start, [start])]
+    def get_paths(self, start, goal, time):
+        stack = [(start, [start], time)]
         while stack:
-            (vertex, path) = stack.pop()
-            for next in self.shortestGraph[vertex] - set(path):
-                if next == goal:
-                    yield path + [next]
-                else:
-                    stack.append((next, path + [next]))
-
-    def longest_paths(self, start, goal, fuel):
-        stack = [(start, [start])]
-        while stack:
-            (vertex, path) = stack.pop()
-            for next in self.shortestGraph[vertex] - set(path):
-                if next == goal:
-                    yield path + [next]
-                else:
-                    stack.append((next, path + [next]))
-
-
-
+            (vertex, path, remainTime) = stack.pop()
+            for next in self.shortestGraph[vertex]:
+                timeToNext = self.graph[path[len(path)-1]][next]
+                timeToGoalFromNext = self.distances[next][goal]
+                if (0 <= remainTime - timeToNext - timeToGoalFromNext): # can to go next vertex and after that go to bulkhead?
+                    nextPath = path + [next] # update path          
+                    nextRemainTime = remainTime - timeToNext        
+                    stack.append((next, nextPath, nextRemainTime))          
+                    if next == goal:
+                        freedBunnies = set(nextPath)
+                        yield freedBunnies  
+                        if len(freedBunnies) == self.V: # all bunnies are released
+                            return
+                    
 
 def answer(times, time_limit):
     # print all distance
-    g = Graph(times)
-
-    # Print input graph:
-    print("input: (time_limit="+ str(time_limit) +")")
-    for row in xrange(g.V):
-        print(row, g.graph[row])
+    g = Graph(times)   
 
     if g.V < 3: 
         return []
-
+    
+    maxFreedBunnies = set([])
     if g.BellmanFordCompleteSource():
         print("shortest distances:")
         for row in xrange(g.V):
@@ -108,140 +100,147 @@ def answer(times, time_limit):
         for c in xrange(g.V):
             print(c, g.shortestPath[c])
         print("shortest graph", g.shortestGraph)
-        print("DFS", list(g.longest_paths(0, g.V-1)))
+
+        for freedBunnies in g.get_paths(0, g.V-1, time_limit):
+            print("result", freedBunnies) 
+            maxLen = len(maxFreedBunnies)
+            freedLen = len(freedBunnies)
+            if maxLen < freedLen or (maxLen == freedLen and sum(maxFreedBunnies) > sum(freedBunnies)):
+                maxFreedBunnies = freedBunnies            
     else:
         return range(g.V-2)
 
+    return map(lambda x: x-1, sorted(maxFreedBunnies - set([0, g.V-1])))            
+    
+
 # ======================= Test Case ==========================================
 if __name__ == "__main__":
+    import datetime
 
-    # print("answer:",
-    # answer([[0,  1,  5,  5,  2],
-    #         [10, 0,  2,  6,  10],
-    #         [10, 10, 0,  1,  5],
-    #         [10, 10, 10, 0,  1],
-    #         [10, 10, 10, 10, 0]], 5))
-    # print("Expected: [0, 1, 2]")
-    # print("============================================================================")
+    def test(times, time_limit, expectedFreedBunnies):
+        # Print input graph:
+        print("input: (time_limit="+ str(time_limit) +")")
+        for row in xrange(len(times)):
+            print(row, times[row])
+        startTime = datetime.datetime.now()        
+        print("answer:", answer(times, time_limit))
+        print("Expected", expectedFreedBunnies)
+        print("Execution time: "+ str((datetime.datetime.now() - startTime)))
+        print("============================================================================")
 
-    # print("answer:",
-    # answer([[0, 1, 3, 4, 2],
-    #         [10, 0, 2, 3, 4],
-    #         [10, 10, 0, 1, 2],
-    #         [10, 10, 10, 0, 1],
-    #         [10, 10, 10, 10, 0]], 3))
-    # print("Expected: [0, 1, 2]")
-    # print("============================================================================")
     
-    # print("answer:",
-    # answer([[0, 2, 2, 2, -1],
-    #         [9, 0, 2, 2, -1],
-    #         [9, 3, 0, 2, -1],
-    #         [9, 3, 2, 0, -1],
-    #         [9, 3, 2, 2, 0]], 1))
-    # print("Expected: [1, 2]")
-    # print("============================================================================")
+    # test([[0,  1,  5,  5,  2],
+    #       [10, 0,  2,  6,  10],
+    #       [10, 10, 0,  1,  5],
+    #       [10, 10, 10, 0,  1],
+    #       [10, 10, 10, 10, 0]], 5, [0, 1, 2]) 
 
-    print("answer:",
-    answer([[0,  1, 10, 10, 10],
-            [10, 0,  1,  1,  2],
-            [10, 1,  0, 10, 10],
-            [10, 1,  10, 0, 10],
-            [10, 10, 10, 10, 0]], 7))
-    print("Expected: [0, 1, 2]")
-    print("============================================================================")
+    
+    # test([[0, 1, 3, 4, 2],
+    #       [10, 0, 2, 3, 4],
+    #       [10, 10, 0, 1, 2],
+    #       [10, 10, 10, 0, 1],
+    #       [10, 10, 10, 10, 0]], 4, [])    
+    
+        
+    # test([[0, 2, 2, 2, -1],
+    #       [9, 0, 2, 2, -1],
+    #       [9, 3, 0, 2, -1],
+    #       [9, 3, 2, 0, -1],
+    #       [9, 3, 2, 2, 0]], 1, [1, 2])
 
-    # print("answer:",
-    # answer([[0, 1, 1, 1, 1],
-    #         [1, 0, 1, 1, 1],
-    #         [1, 1, 0, 1, 1],
-    #         [1, 1, 1, 0, 1],
-    #         [1, 1, 1, 1, 0]], 3))
-    # print("Expected: [0, 1]")
-    # print("============================================================================")
+        
+    # test([[0,  1, 10, 10, 10],
+    #       [10, 0,  1,  1,  2],
+    #       [10, 1,  0, 10, 10],
+    #       [10, 1,  10, 0, 10],
+    #       [10, 10, 10, 10, 0]], 7, [0, 1, 2])
 
-    # print("answer:",
-    # answer([[0, 5, 11, 11, 1],
-    #         [10, 0, 1, 5, 1],
-    #         [10, 1, 0, 4, 0],
-    #         [10, 1, 5, 0, 1],
-    #         [10, 10, 10, 10, 0]], 10))
-    # print("Expected: [0, 1]")
-    # print("============================================================================")
+        
+    # test([[0, 1, 1, 1, 1],
+    #       [1, 0, 1, 1, 1],
+    #       [1, 1, 0, 1, 1],
+    #       [1, 1, 1, 0, 1],
+    #       [1, 1, 1, 1, 0]], 3, [0, 1])
 
-    # print("answer:",
-    # answer([[1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 1, 1, 1]], 1))
-    # print("Expected: []")
-    # print("============================================================================")
+        
+    # test([[0, 5, 11, 11, 1],
+    #       [10, 0, 1, 5, 1],
+    #       [10, 1, 0, 4, 0],
+    #       [10, 1, 5, 0, 1],
+    #       [10, 10, 10, 10, 0]], 10, [0, 1])
+
+        
+    # test([[0, 20, 20, 20, -1],
+    #       [90, 0, 20, 20, 0],
+    #       [90, 30, 0, 20, 0],
+    #       [90, 30, 20, 0, 0],
+    #       [-1, 30, 20, 20, 0]], 0, [0, 1, 2])
+
+        
+    # test([[0, 10, 10, 10, 1],
+    #       [0, 0, 10, 10, 10],
+    #       [0, 10, 0, 10, 10],
+    #       [0, 10, 10, 0, 10],
+    #       [1, 1, 1, 1, 0]], 5, [0, 1])
+
+        
+    # test([[2, 2],
+    #       [2, 2]], 5, [])
+
+        
+    # test([[0, 10, 10, 1, 10],
+    #       [10, 0, 10, 10, 1],
+    #       [10, 1, 0, 10, 10],
+    #       [10, 10, 1, 0, 10],
+    #       [1, 10, 10, 10, 0]], 6, [0, 1, 2])
+
+        
+    # test([[1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 1, 1, 1]], 1, [])
    
-    # print("answer:",
-    # answer([[0, 20, 20, 20, -1],
-    #         [90, 0, 20, 20, 0],
-    #         [90, 30, 0, 20, 0],
-    #         [90, 30, 20, 0, 0],
-    #         [-1, 30, 20, 20, 0]], 0))
-    # print("Expected: [0, 1, 2]")
-    # print("============================================================================")
+        
+    # test([[0, 0, 0, 0, 0],
+    #       [0, 0, 0, 0, 0],
+    #       [0, 0, 0, 0, 0],
+    #       [0, 0, 0, 0, 0],
+    #       [0, 0, 0, 0, 0]], 0, [0, 1, 2])
 
-    # print("answer:",
-    # answer([[0, 10, 10, 10, 1],
-    #         [0, 0, 10, 10, 10],
-    #         [0, 10, 0, 10, 10],
-    #         [0, 10, 10, 0, 10],
-    #         [1, 1, 1, 1, 0]], 5))
-    # print("Expected: [0, 1]")
-    # print("============================================================================")
+    # test([[0, 0, 1, 1, 1],
+    #       [0, 0, 0, 1, 1],
+    #       [0, 0, 0, 0, 1],
+    #       [0, 0, 0, 0, 0],
+    #       [0, 0, 0, 0, 0]], 0, [0, 1, 2])
 
-    # print("answer:",
-    # answer([[0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0],
-    #         [0, 0, 0, 0, 0]], 0))
-    # print("Expected: [0, 1, 2]")
-    # print("============================================================================")
-
-    # print("answer:",
-    # answer([[2, 2],
-    #         [2, 2]], 5))
-    # print("Expected: []")
-    # print("============================================================================")
-
-    # print("answer:",
-    # answer([[0, 10, 10, 1, 10],
-    #         [10, 0, 10, 10, 1],
-    #         [10, 1, 0, 10, 10],
-    #         [10, 10, 1, 0, 10],
-    #         [1, 10, 10, 10, 0]], 6))
-    # print("Expected: [0, 1, 2]")
-    # print("============================================================================")
-
-    # print("answer:",
-    # answer([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #         [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    #         [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    #         [0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    #         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    #         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    #         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], 5))
-    # print("Expected: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]")
-    # print("============================================================================")
+    test([[0, 0, 0, 1, 1],
+          [0, 0, 0, 0, 1],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0]], 0, [0, 1, 2])
+        
+    # test([[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #       [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    #       [1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    #       [0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    #       [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    #       [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    #       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], 
+    #       5, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
