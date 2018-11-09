@@ -21,9 +21,9 @@ The challenge consists of 5 levels consisting of algorithm problems.
 It was really a great experience so far.
 The first few levels were relatively easy, but as the levels peaked up, the difficulty gained heights.
 
-Currently I am on level 4 and just have one more label to go.
+Currently I am on level 5 and just have one more label to go.
 
-![current-level-status](https://github.com/bezzad/foobar.withgoogle/raw/master/img/current-level-status.jpg)
+![current-level-status](https://github.com/bezzad/foobar.withgoogle/raw/master/img/current-level-status.png)
 
 Upon completing level 3, I had to submit my personal details with a potential recruiter for a future interview.
 The Google Foobar is presumably still hiring and its needed to submit solution either in **Python** or **Java**.
