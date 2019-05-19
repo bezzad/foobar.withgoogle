@@ -51,6 +51,7 @@ Inside each level is a challenge folder with a problem file describing the chall
 
 - [Free the Bunny Prisoners](https://github.com/bezzad/foobar.withgoogle/tree/master/4.1%20Free%20the%20Bunny%20Prisoners)
 - [Running with Bunnies](https://github.com/bezzad/foobar.withgoogle/tree/master/4.2%20Running%20with%20Bunnies)
+- [Bringing a Gun to a Guard Fight](https://github.com/bezzad/foobar.withgoogle/tree/master/4.3%20Bringing%20a%20Gun%20to%20a%20Guard%20Fight)
 
 ### Level 5
 
